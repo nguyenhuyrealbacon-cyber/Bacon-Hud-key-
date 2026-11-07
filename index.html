@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bacon Hub - Official Key System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>Bacon Hub - Get Key System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,19 +13,173 @@
         }
 
         body {
-            background-color: #0b0709;
+            background: url('https://i.pinimg.com/564x/fc/42/c4/fc42c402524859f1a5e0c952c25b69a3.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: #ffffff;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
             position: relative;
         }
 
-        .glow-bg {
+        /* Lớp phủ tối giúp rõ giao diện card */
+        body::before {
+            content: '';
             position: absolute;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(255, 60, 60, 0.25) 0%, rgba(0,
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(25, 25, 25, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 35px 25px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            color: #b0b0b0;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .step-box {
+            display: none;
+        }
+
+        .step-box.active {
+            display: block;
+        }
+
+        .btn {
+            background: #fe2c55;
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 15px rgba(254, 44, 85, 0.4);
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background: #e11d43;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .key-box {
+            background: rgba(15, 15, 15, 0.9);
+            border: 1.5px dashed #fe2c55;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #00ff88;
+            word-break: break-all;
+            margin-bottom: 15px;
+            user-select: all;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>BACON HUB</h1>
+        <p class="subtitle">Hệ thống lấy Key tự động</p>
+
+        <!-- Bước 1: Yêu cầu Follow TikTok -->
+        <div id="step1" class="step-box active">
+            <p style="font-size: 14px; margin-bottom: 20px; color: #ddd;">Bạn cần Follow TikTok <b style="color: #fe2c55;">@huy.nguyn.bacon</b> để mở khóa Key.</p>
+            <button class="btn" onclick="startFollowProcess()">FOLLOW TIKTOK ĐỂ LẤY KEY</button>
+        </div>
+
+        <!-- Bước 2: Tự nhận diện và hiện Key khi quay lại -->
+        <div id="step2" class="step-box">
+            <p style="font-size: 14px; margin-bottom: 10px; color: #00ff88;">✔ Đã xác nhận hoàn thành!</p>
+            <div class="key-box" id="keyDisplay">Đang tải...</div>
+            <button class="btn" id="copyBtn" onclick="copyKey()">SAO CHÉP KEY</button>
+        </div>
+
+        <div class="footer">
+            make by huy.nguyn.bacon
+        </div>
+    </div>
+
+    <script>
+        const tiktokLink = "https://www.tiktok.com/@huy.nguyn.bacon";
+
+        // Tự động kiểm tra trạng thái khi quay lại trang web
+        window.onload = function() {
+            if (localStorage.getItem("bacon_hub_followed") === "true") {
+                showKeyStep();
+            }
+        }
+
+        function startFollowProcess() {
+            // Lưu trạng thái đã bấm follow
+            localStorage.setItem("bacon_hub_followed", "true");
+            
+            // Chuyển hướng người dùng sang đúng kênh TikTok của bạn
+            window.location.href = tiktokLink;
+        }
+
+        function showKeyStep() {
+            document.getElementById("step1").classList.remove("active");
+            document.getElementById("step2").classList.add("active");
+            
+            // Tính toán Key đồng bộ thời gian thực theo từng giờ
+            let timeBlock = Math.floor(Date.now() / 1000 / 3600);
+            let secretCode = (timeBlock * 16253) % 90000 + 10000;
+            let currentKey = "ssaa_" + secretCode;
+            
+            document.getElementById("keyDisplay").innerText = currentKey;
+        }
+
+        function copyKey() {
+            let keyText = document.getElementById("keyDisplay").innerText;
+            navigator.clipboard.writeText(keyText).then(() => {
+                let btn = document.getElementById("copyBtn");
+                btn.innerText = "ĐÃ SAO CHÉP!";
+                btn.style.background = "#00b894";
+                setTimeout(() => {
+                    btn.innerText = "SAO CHÉP KEY";
+                    btn.style.background = "#fe2c55";
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
