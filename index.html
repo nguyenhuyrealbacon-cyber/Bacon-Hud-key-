@@ -1,171 +1,90 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bacon Hub - Key System</title>
+    <title>Bacon Script Hub - TikTok Key Portal</title>
     <style>
-        body {
-            background-color: #141414;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: #1f1f1f;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            text-align: center;
-            width: 320px;
-            position: relative;
-        }
-        h2 { margin-bottom: 10px; color: #ff5252; font-family: monospace; }
-        p { color: #aaa; font-size: 13px; margin-bottom: 20px; }
-        .btn {
-            background-color: #fe2c55;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            transition: 0.2s;
-        }
-        .btn:hover { background-color: #e0244b; }
-        .key-box {
-            background: #2b2b2b;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 20px;
-            word-break: break-all;
-            font-family: monospace;
-            color: #00ff88;
-            font-size: 14px;
-            border: 1px dashed #444;
-        }
-        /* Nút Admin nhỏ ở dưới */
-        .admin-trigger {
-            margin-top: 15px;
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 11px;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .admin-panel {
-            display: none;
-            margin-top: 15px;
-            background: #191919;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            text-align: left;
-        }
-        .admin-panel label {
-            font-size: 11px;
-            color: #aaa;
-            display: block;
-            margin-bottom: 3px;
-        }
-        .admin-input {
-            width: 100%;
-            background: #262626;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 6px;
-            border-radius: 4px;
-            font-size: 12px;
-            box-sizing: border-box;
-            margin-bottom: 8px;
-        }
-        .admin-result {
-            font-family: monospace;
-            color: #3498db;
-            font-size: 12px;
-            word-break: break-all;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #121216; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { background-color: #1c1c24; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); width: 360px; text-align: center; }
+        h2 { margin-bottom: 10px; font-size: 20px; color: #ff0050; }
+        p { font-size: 13px; color: #aaa; margin-bottom: 20px; }
+        .btn { display: block; width: 100%; padding: 12px; margin-bottom: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .btn-tiktok { background-color: #ff0050; color: white; }
+        .btn-tiktok:hover { background-color: #e00045; }
+        .btn-copy { background-color: #00aa55; color: white; display: none; }
+        .key-box { background-color: #282833; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 16px; color: #00ffcc; margin-bottom: 20px; word-break: break-all; display: none; }
+        #timerText { color: #ffcc00; font-weight: bold; margin-bottom: 15px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>BACON HUB</h2>
-    <p>Hoàn thành vượt link để lấy key sử dụng trong game.</p>
-    
-    <!-- Nút lấy key chính -->
-    <button class="btn" onclick="openLink()">GET KEY</button>
-    
-    <!-- Ô hiển thị key theo giờ -->
-    <div id="keyDisplay" class="key-box">Đang tạo key...</div>
+    <div class="container">
+        <h2>TikTok Verification</h2>
+        <p id="instruction">Follow our TikTok to unlock your daily key.</p>
 
-    <!-- Nút Admin nhỏ -->
-    <button class="admin-trigger" onclick="toggleAdmin()">Admin</button>
+        <!-- Nút dẫn sang TikTok -->
+        <a href="https://www.tiktok.com/@your_tiktok_id" target="_blank" id="tiktokBtn" class="btn btn-tiktok" onclick="startTimer()">1. Follow on TikTok</a>
 
-    <!-- Bảng Admin ẩn/hiện -->
-    <div id="adminPanel" class="admin-panel">
-        <label>Key hiện tại (1 tiếng):</label>
-        <div id="hourlyKeyResult" class="admin-result">---</div>
-        
-        <div style="margin-top: 8px;">
-            <label>Admin Key Pass:</label>
-            <input type="password" id="adminKeyInput" class="admin-input" placeholder="Nhập pass lấy key vv..." oninput="checkAdminKey(this.value)">
-        </div>
-        <div id="permanentKeyResult" class="admin-result" style="color: #e74c3c;"></div>
+        <div id="timerText"></div>
+
+        <!-- Khung hiển thị Key (ẩn đi lúc đầu) -->
+        <div class="key-box" id="keyDisplay">Loading...</div>
+        <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">2. Copy Key</button>
     </div>
-</div>
 
-<script>
-    // Thuật toán sinh key theo giờ chuẩn xác
-    function getHourlyKey() {
-        const blockTime = Math.floor(Date.now() / 1000 / 3600);
-        const secretCode = (blockTime * 16253) % 90000 + 10000;
-        return "ssaa_" + secretCode;
-    }
-
-    // Gán key theo giờ vào giao diện chính
-    const currentKey = getHourlyKey();
-    document.getElementById("keyDisplay").innerText = currentKey;
-    document.getElementById("hourlyKeyResult").innerText = currentKey;
-
-    function openLink() {
-        // Thay link Linkvertise hoặc trạm rút gọn của bạn vào đây
-        window.location.href = "https://linkvertise.com"; 
-    }
-
-    // Xử lý bật/tắt bảng Admin bằng mật khẩu nah'iwin
-    function toggleAdmin() {
-        let panel = document.getElementById("adminPanel");
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
-        } else {
-            let pass = prompt("Nhập mật khẩu Admin:");
-            if (pass === "nah'iwin") {
-                panel.style.display = "block";
-            } else if (pass !== null) {
-                alert("Sai mật khẩu!");
+    <script>
+        const dailyKey = "BACON_" + String(new Date().getDate()).padStart(2, '0') + "_VIP";
+        
+        // Kiểm tra xem trình duyệt này đã từng hoàn thành follow chưa (Để lần sau vào không cần làm lại)
+        window.onload = function() {
+            if (localStorage.getItem("tiktok_verified") === "true") {
+                unlockKey();
             }
         }
-    }
 
-    // Xử lý ô nhập mật khẩu lấy key vĩnh viễn (helloworldnah'iwin)
-    function checkAdminKey(val) {
-        let resBox = document.getElementById("permanentKeyResult");
-        if (val === "helloworldnah'iwin") {
-            resBox.innerText = "Key VV: ssaa_16253";
-            resBox.style.color = "#2ecc71";
-        } else {
-            resBox.innerText = "";
+        function startTimer() {
+            if (localStorage.getItem("tiktok_verified") === "true") return;
+            
+            let timeLeft = 10; // Đợi 10 giây mới cho nhận key (chống vượt nhanh)
+            const tiktokBtn = document.getElementById("tiktokBtn");
+            const timerText = document.getElementById("timerText");
+            
+            tiktokBtn.style.opacity = "0.6";
+            tiktokBtn.innerText = "Checking TikTok...";
+            
+            let countdown = setInterval(() => {
+                timerText.innerText = "Please wait on TikTok: " + timeLeft + "s remaining...";
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    timerText.innerText = "Verification Successful!";
+                    localStorage.setItem("tiktok_verified", "true"); // Lưu trạng thái thiết bị
+                    unlockKey();
+                }
+            }, 1000);
         }
-    }
-</script>
+
+        function unlockKey() {
+            document.getElementById("tiktokBtn").style.display = "none";
+            document.getElementById("timerText").style.display = "none";
+            document.getElementById("instruction").innerText = "Your key is ready!";
+            
+            document.getElementById("keyDisplay").innerText = dailyKey;
+            document.getElementById("keyDisplay").style.display = "block";
+            
+            const copyBtn = document.getElementById("copyBtn");
+            copyBtn.style.display = "block";
+        }
+
+        function copyKey() {
+            navigator.clipboard.writeText(dailyKey).then(() => {
+                alert("Key copied: " + dailyKey);
+            });
+        }
+    </script>
 
 </body>
 </html>
