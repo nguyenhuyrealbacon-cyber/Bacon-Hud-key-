@@ -3,230 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bacon Hub - Get Key</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Bacon Script Hub - Key System</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: no-repeat center center fixed;
-            background-size: cover;
-            color: #ffffff;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            background: rgba(25, 25, 25, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 35px 25px;
-            width: 90%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        p.subtitle {
-            color: #b0b0b0;
-            font-size: 13px;
-            margin-bottom: 25px;
-        }
-
-        .step-box {
-            display: none;
-        }
-
-        .step-box.active {
-            display: block;
-        }
-
-        .btn {
-            background: #fe2c55;
-            color: #ffffff;
-            border: none;
-            padding: 14px 20px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 12px;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.2s ease;
-            box-shadow: 0 4px 15px rgba(254, 44, 85, 0.4);
-            margin-bottom: 15px;
-        }
-
-        .btn:hover {
-            background: #e11d43;
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .key-box {
-            background: rgba(15, 15, 15, 0.9);
-            border: 1.5px dashed #fe2c55;
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #00ff88;
-            word-break: break-all;
-            margin-bottom: 15px;
-            user-select: all;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #777777;
-        }
-
-        .reset-link {
-            background: none;
-            border: none;
-            color: #ff4757;
-            font-size: 11px;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-top: 10px;
-            display: inline-block;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #121216; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { background-color: #1c1c24; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); width: 380px; text-align: center; }
+        h2 { margin-bottom: 10px; font-size: 20px; color: #ff0050; }
+        p { font-size: 13px; color: #aaa; margin-bottom: 20px; }
+        .btn { display: block; width: 100%; padding: 12px; margin-bottom: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .btn-tiktok { background-color: #ff0050; color: white; }
+        .btn-tiktok:hover { background-color: #e00045; }
+        .btn-copy { background-color: #00aa55; color: white; display: none; }
+        .key-box { background-color: #282833; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 16px; color: #00ffcc; margin-bottom: 20px; word-break: break-all; display: none; }
+        #statusText { color: #ffcc00; font-weight: bold; margin-bottom: 15px; font-size: 14px; min-height: 20px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>BACON HUB</h1>
-        <p class="subtitle">Automated Key System</p>
+        <h2>TikTok Verification</h2>
+        <p id="instruction">Complete the steps below to unlock your key.</p>
 
-        <!-- Step 1 -->
-        <div id="step1" class="step-box active">
-            <p style="font-size: 14px; margin-bottom: 20px; color: #ddd;">You need to follow TikTok <b style="color: #fe2c55;">@huy.nguyn.bacon</b> to unlock the key.</p>
-            <button class="btn" onclick="startFollowProcess()">FOLLOW ON TIKTOK</button>
-        </div>
+        <!-- Nút chuyển hướng sang TikTok -->
+        <a href="https://www.tiktok.com/@your_tiktok_id" target="_blank" id="actionBtn" class="btn btn-tiktok" onclick="verifyProcess()">1. Follow on TikTok</a>
 
-        <!-- Step 2 -->
-        <div id="step2" class="step-box">
-            <p style="font-size: 14px; margin-bottom: 10px; color: #00ff88;">✔ Successfully Verified!</p>
-            <div class="key-box" id="keyDisplay">Loading...</div>
-            <button class="btn" id="copyBtn" onclick="copyKey()">COPY KEY</button>
-        </div>
+        <!-- Dòng thông báo trạng thái -->
+        <div id="statusText"></div>
 
-        <div class="footer">
-            Made by huy.nguyn.bacon<br>
-            <button class="reset-link" onclick="resetTest()">[ Reset Test Mode ]</button>
-        </div>
+        <!-- Khung chứa Key (ban đầu ẩn) -->
+        <div class="key-box" id="keyDisplay">Generating...</div>
+        <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">2. Copy Key</button>
     </div>
 
     <script>
-        const backgrounds = [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSU21GdJecLBT3L4GcrR8TKY9D3SZiwlxiS676GJkddA&s=10",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdBLLK1e3_73Sp0w4r8JwfFMS-Gxf8xb40t_wUObrbUw&s=10",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPqOcPhZCClGNfDZmAvNFYBDWYK6dsNumtiwVn6xLfOQ&s=10",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFeq9LVxJCbpSiuMtn7pvG5ZhwIidq7zBQntkJ87VcUQ&s=10",
-            "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop"
-        ];
-
-        const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-        document.body.style.backgroundImage = `url('${randomBg}')`;
-
-        const tiktokLink = "https://www.tiktok.com/@huy.nguyn.bacon";
-
-        function checkStatus() {
-            let currentTimeBlock = Math.floor(Date.now() / 1000 / 3600);
-            let savedTimeBlock = localStorage.getItem("bacon_hub_timeblock");
-
-            // Nếu sang giờ mới (key mới) hoặc chưa từng follow, bắt buộc reset về bước 1
-            if (!savedTimeBlock || parseInt(savedTimeBlock) !== currentTimeBlock) {
-                localStorage.removeItem("bacon_hub_followed");
-                return;
-            }
-
-            if (localStorage.getItem("bacon_hub_followed") === "true") {
-                showKeyStep();
+        const dailyKey = "BACON_" + String(new Date().getDate()).padStart(2, '0') + "_VIP";
+        
+        // Tự động kiểm tra nếu thiết bị này đã vượt link trước đó (lần sau vào không cần làm lại)
+        window.onload = function() {
+            if (localStorage.getItem("tiktok_verified") === "true") {
+                showSuccessState();
             }
         }
 
-        window.onload = checkStatus;
-        window.onfocus = checkStatus;
+        function verifyProcess() {
+            if (localStorage.getItem("tiktok_verified") === "true") return;
 
-        function startFollowProcess() {
-            let currentTimeBlock = Math.floor(Date.now() / 1000 / 3600);
-            localStorage.setItem("bacon_hub_timeblock", currentTimeBlock);
-            localStorage.setItem("bacon_hub_followed", "true");
+            const actionBtn = document.getElementById("actionBtn");
+            const statusText = document.getElementById("statusText");
             
-            window.open(tiktokLink, '_blank');
+            actionBtn.style.pointerEvents = "none";
+            actionBtn.style.opacity = "0.5";
+            actionBtn.innerText = "Verifying...";
+
+            let timeLeft = 8; // Thời gian đếm ngược kiểm tra thao tác
+            
+            let countdown = setInterval(() => {
+                statusText.innerText = "Checking activity: " + timeLeft + "s remaining...";
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    statusText.style.color = "#00ffcc";
+                    statusText.innerText = "Successfully! Redirecting to get key...";
+                    
+                    // Lưu trạng thái để các lần sau vào không cần follow lại nữa
+                    localStorage.setItem("tiktok_verified", "true");
+                    
+                    setTimeout(() => {
+                        showSuccessState();
+                    }, 1200); // Đợi 1.2 giây hiện thông báo rồi chuyển về giao diện lấy key
+                }
+            }, 1000);
         }
 
-        function showKeyStep() {
-            document.getElementById("step1").classList.remove("active");
-            document.getElementById("step2").classList.add("active");
+        function showSuccessState() {
+            document.getElementById("actionBtn").style.display = "none";
+            document.getElementById("statusText").style.display = "none";
+            document.getElementById("instructioninnerText", "Your key is ready below!");
+            document.getElementById("instruction").innerText = "Successfully! Here is your key:";
             
-            let timeBlock = Math.floor(Date.now() / 1000 / 3600);
-            let secretCode = (timeBlock * 16253) % 90000 + 10000;
-            let currentKey = "ssaa_" + secretCode;
+            document.getElementById("keyDisplay").innerText = dailyKey;
+            document.getElementById("keyDisplay").style.display = "block";
             
-            document.getElementById("keyDisplay").innerText = currentKey;
+            const copyBtn = document.getElementById("copyBtn");
+            copyBtn.style.display = "block";
         }
 
         function copyKey() {
-            let keyText = document.getElementById("keyDisplay").innerText;
-            navigator.clipboard.writeText(keyText).then(() => {
-                let btn = document.getElementById("copyBtn");
-                btn.innerText = "COPIED!";
-                btn.style.background = "#00b894";
-                setTimeout(() => {
-                    btn.innerText = "COPY KEY";
-                    btn.style.background = "#fe2c55";
-                }, 2000);
+            navigator.clipboard.writeText(dailyKey).then(() => {
+                alert("Key copied successfully: " + dailyKey);
             });
         }
-
-        function resetTest() {
-            localStorage.removeItem("bacon_hub_followed");
-            localStorage.removeItem("bacon_hub_timeblock");
-            location.reload();
-        }
     </script>
+
 </body>
 </html>
