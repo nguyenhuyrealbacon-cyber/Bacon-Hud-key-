@@ -1,196 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bacon Script Hub - Key System</title>
+    <title>Bacon Hub - Key System</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #121216; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; position: relative; }
-        .container { background-color: #1c1c24; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); width: 380px; text-align: center; }
-        h2 { margin-bottom: 10px; font-size: 20px; color: #ff0050; }
-        p { font-size: 13px; color: #aaa; margin-bottom: 20px; }
-        .btn { display: block; width: 100%; padding: 12px; margin-bottom: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.2s; }
-        .btn-tiktok { background-color: #ff0050; color: white; }
-        .btn-tiktok:hover { background-color: #e00045; }
-        .btn-copy { background-color: #00aa55; color: white; display: none; }
-        .key-box { background-color: #282833; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 16px; color: #00ffcc; margin-bottom: 20px; word-break: break-all; display: none; }
-        #statusText { color: #ffcc00; font-weight: bold; margin-bottom: 15px; font-size: 14px; min-height: 20px; }
-
-        /* Góc nhỏ Admin ở góc màn hình */
-        .admin-corner {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(28, 28, 36, 0.85);
-            border: 1px solid #333;
-            padding: 8px 12px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            cursor: pointer;
-            transition: 0.2s;
+        body {
+            background-color: #141414;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            align-items: center;
-            gap: 6px;
-            z-index: 999;
-        }
-        .admin-corner:hover {
-            border-color: #ff0050;
-        }
-        .admin-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #ff0050;
-            border-radius: 50%;
-        }
-        .admin-label {
-            font-size: 11px;
-            font-weight: bold;
-            color: #fff;
-            letter-spacing: 0.5px;
-        }
-
-        /* Modal nhập mật khẩu Admin */
-        .admin-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            height: 100vh;
+            margin: 0;
         }
-        .admin-box {
-            background: #1c1c24;
-            padding: 25px;
-            border-radius: 10px;
-            width: 300px;
+        .container {
+            background: #1f1f1f;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             text-align: center;
-            border: 1px solid #ff0050;
+            width: 320px;
         }
-        .admin-box input {
+        h2 { margin-bottom: 20px; color: #ff5252; }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
             width: 100%;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn:hover { background-color: #2980b9; }
+        .admin-btn {
+            background-color: transparent;
+            color: #888;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: underline;
+        }
+        .key-box {
+            background: #2b2b2b;
             padding: 10px;
-            background: #121216;
-            border: 1px solid #444;
-            color: #fff;
             border-radius: 6px;
             margin-top: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
-        .admin-box input:focus {
-            border-color: #ff0050;
-            outline: none;
+            word-break: break-all;
+            font-family: monospace;
+            color: #00ff88;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>TikTok Verification</h2>
-        <p id="instruction">Complete the steps below to unlock your key.</p>
+<div class="container">
+    <h2>BACON HUB</h2>
+    <p>Hoàn thành vượt link để lấy key sử dụng trong game.</p>
+    
+    <!-- Link vượt link chính của bạn (có thể thay đổi link rút gọn vào đây) -->
+    <button class="btn" onclick="location.href='https://linkvertise.com'">GET KEY</button>
+    
+    <div id="userKeyBox" class="key-box">Key của bạn: ssaa_...</div>
 
-        <!-- Nút chuyển hướng sang TikTok cho người chơi thường -->
-        <a href="https://www.tiktok.com/@your_tiktok_id" target="_blank" id="actionBtn" class="btn btn-tiktok" onclick="verifyProcess()">1. Follow on TikTok</a>
+    <!-- Nút Admin -->
+    <button class="admin-btn" onclick="openAdmin()">ADMIN PANEL</button>
+</div>
 
-        <div id="statusText"></div>
+<script>
+    // Thuật toán giả lập tạo key theo giờ giống hệt trong game
+    function getHourlyKey() {
+        const blockTime = Math.floor(Date.now() / 1000 / 3600);
+        const secretCode = (blockTime * 16253) % 90000 + 10000;
+        return "ssaa_" + secretCode;
+    }
 
-        <!-- Khung chứa Key -->
-        <div class="key-box" id="keyDisplay">Generating...</div>
-        <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">2. Copy Key</button>
-    </div>
+    // Hiển thị key giờ tự động cho người dùng bình thường
+    document.getElementById("userKeyBox").innerText = "Key của bạn: " + getHourlyKey();
+    document.getElementById("userKeyBox").style.display = "block";
 
-    <!-- Góc nhỏ Admin -->
-    <div class="admin-corner" onclick="openAdminModal()">
-        <div class="admin-dot"></div>
-        <span class="admin-label">ADMIN</span>
-    </div>
-
-    <!-- Bảng nhập mật khẩu Admin -->
-    <div class="admin-modal" id="adminModal" onclick="closeAdminModal(event)">
-        <div class="admin-box" onclick="event.stopPropagation()">
-            <h3 style="color: #ff0050; font-size: 16px; margin-bottom: 5px;">Owner Portal</h3>
-            <p style="font-size: 11px; color: #aaa; margin-bottom: 0;">Enter owner password to bypass:</p>
-            <input type="password" id="ownerPassInput" placeholder="Password..." oninput="checkOwnerPass(this)">
-        </div>
-    </div>
-
-    <script>
-        const dailyKey = "BACON_" + String(new Date().getDate()).padStart(2, '0') + "_VIP";
-        const OWNER_SECRET = "nah'iwin"; // Mật khẩu bạn yêu cầu
-
-        window.onload = function() {
-            if (localStorage.getItem("tiktok_verified") === "true") {
-                showSuccessState();
+    function openAdmin() {
+        let pass = prompt("Nhập mật khẩu Admin:");
+        if (pass === "nah'iwin") {
+            let adminPass2 = prompt("Nhập mật khẩu Admin Key (helloworldnah'iwin):");
+            if (adminPass2 === "helloworldnah'iwin") {
+                alert("Key vĩnh viễn của bạn là: ssaa_16253");
+            } else {
+                alert("Sai mật khẩu Admin Key! Key giờ hiện tại là: " + getHourlyKey());
             }
+        } else {
+            alert("Sai mật khẩu Admin!");
         }
-
-        function openAdminModal() {
-            document.getElementById("adminModal").style.display = "flex";
-            document.getElementById("ownerPassInput").focus();
-        }
-
-        function closeAdminModal(e) {
-            document.getElementById("adminModal").style.display = "none";
-        }
-
-        function checkOwnerPass(input) {
-            if (input.value === OWNER_SECRET) {
-                localStorage.setItem("tiktok_verified", "true");
-                document.getElementById("adminModal").style.display = "none";
-                showSuccessState();
-                alert("Successfully! Admin bypass activated.");
-            }
-        }
-
-        function verifyProcess() {
-            if (localStorage.getItem("tiktok_verified") === "true") return;
-
-            const actionBtn = document.getElementById("actionBtn");
-            const statusText = document.getElementById("statusText");
-            
-            actionBtn.style.pointerEvents = "none";
-            actionBtn.style.opacity = "0.5";
-            actionBtn.innerText = "Verifying...";
-
-            let timeLeft = 8;
-            
-            let countdown = setInterval(() => {
-                statusText.innerText = "Checking activity: " + timeLeft + "s remaining...";
-                timeLeft--;
-                
-                if (timeLeft < 0) {
-                    clearInterval(countdown);
-                    statusText.style.color = "#00ffcc";
-                    statusText.innerText = "Successfully! Redirecting to get key...";
-                    localStorage.setItem("tiktok_verified", "true");
-                    
-                    setTimeout(() => {
-                        showSuccessState();
-                    }, 1200);
-                }
-            }, 1000);
-        }
-
-        function showSuccessState() {
-            document.getElementById("actionBtn").style.display = "none";
-            document.getElementById("statusText").style.display = "none";
-            document.getElementById("instruction").innerText = "Successfully! Here is your key:";
-            document.getElementById("keyDisplay").innerText = dailyKey;
-            document.getElementById("keyDisplay").style.display = "block";
-            document.getElementById("copyBtn").style.display = "block";
-            
-            // Ẩn luôn nút admin nhỏ khi đã unlock thành công
-            document.querySelector(".admin-corner").style.display = "none";
-        }
-
-        function copyKey() {
-            navigator.clipboard.writeText(dailyKey).then(() => {
-                alert("Key copied successfully: " + dailyKey);
-            });
-        }
-    </script>
+    }
+</script>
 
 </body>
 </html>
