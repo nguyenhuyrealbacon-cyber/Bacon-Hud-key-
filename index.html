@@ -111,6 +111,17 @@
             font-size: 12px;
             color: #777777;
         }
+
+        .reset-link {
+            background: none;
+            border: none;
+            color: #ff4757;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 10px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -133,20 +144,17 @@
         </div>
 
         <div class="footer">
-            Made by huy.nguyn.bacon
+            Made by huy.nguyn.bacon<br>
+            <button class="reset-link" onclick="resetTest()">[ Reset Test Mode ]</button>
         </div>
     </div>
 
     <script>
-        // Tổng hợp toàn bộ 4 hình bạn vừa gửi + 10 hình phong cách Cyberpunk/Dark mới thêm
         const backgrounds = [
-            // 4 hình bạn vừa gửi
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSU21GdJecLBT3L4GcrR8TKY9D3SZiwlxiS676GJkddA&s=10",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdBLLK1e3_73Sp0w4r8JwfFMS-Gxf8xb40t_wUObrbUw&s=10",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPqOcPhZCClGNfDZmAvNFYBDWYK6dsNumtiwVn6xLfOQ&s=10",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFeq9LVxJCbpSiuMtn7pvG5ZhwIidq7zBQntkJ87VcUQ&s=10",
-            
-            // 10 hình bổ sung thêm cực ngầu
             "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=1000&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1000&auto=format&fit=crop",
@@ -159,13 +167,21 @@
             "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop"
         ];
 
-        // Lấy ngẫu nhiên 1 hình nền khi tải trang
         const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
         document.body.style.backgroundImage = `url('${randomBg}')`;
 
         const tiktokLink = "https://www.tiktok.com/@huy.nguyn.bacon";
 
         function checkStatus() {
+            let currentTimeBlock = Math.floor(Date.now() / 1000 / 3600);
+            let savedTimeBlock = localStorage.getItem("bacon_hub_timeblock");
+
+            // Nếu sang giờ mới (key mới) hoặc chưa từng follow, bắt buộc reset về bước 1
+            if (!savedTimeBlock || parseInt(savedTimeBlock) !== currentTimeBlock) {
+                localStorage.removeItem("bacon_hub_followed");
+                return;
+            }
+
             if (localStorage.getItem("bacon_hub_followed") === "true") {
                 showKeyStep();
             }
@@ -175,7 +191,10 @@
         window.onfocus = checkStatus;
 
         function startFollowProcess() {
+            let currentTimeBlock = Math.floor(Date.now() / 1000 / 3600);
+            localStorage.setItem("bacon_hub_timeblock", currentTimeBlock);
             localStorage.setItem("bacon_hub_followed", "true");
+            
             window.open(tiktokLink, '_blank');
         }
 
@@ -201,6 +220,12 @@
                     btn.style.background = "#fe2c55";
                 }, 2000);
             });
+        }
+
+        function resetTest() {
+            localStorage.removeItem("bacon_hub_followed");
+            localStorage.removeItem("bacon_hub_timeblock");
+            location.reload();
         }
     </script>
 </body>
