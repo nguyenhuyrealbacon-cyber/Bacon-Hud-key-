@@ -22,10 +22,12 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             text-align: center;
             width: 320px;
+            position: relative;
         }
-        h2 { margin-bottom: 20px; color: #ff5252; }
+        h2 { margin-bottom: 10px; color: #ff5252; font-family: monospace; }
+        p { color: #aaa; font-size: 13px; margin-bottom: 20px; }
         .btn {
-            background-color: #3498db;
+            background-color: #fe2c55;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -34,28 +36,61 @@
             cursor: pointer;
             font-weight: bold;
             width: 100%;
-            margin-top: 10px;
             transition: 0.2s;
         }
-        .btn:hover { background-color: #2980b9; }
-        .admin-btn {
-            background-color: transparent;
-            color: #888;
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            margin-top: 20px;
-            text-decoration: underline;
-        }
+        .btn:hover { background-color: #e0244b; }
         .key-box {
             background: #2b2b2b;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
             word-break: break-all;
             font-family: monospace;
             color: #00ff88;
+            font-size: 14px;
+            border: 1px dashed #444;
+        }
+        /* Nút Admin nhỏ ở dưới */
+        .admin-trigger {
+            margin-top: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .admin-panel {
             display: none;
+            margin-top: 15px;
+            background: #191919;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            text-align: left;
+        }
+        .admin-panel label {
+            font-size: 11px;
+            color: #aaa;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .admin-input {
+            width: 100%;
+            background: #262626;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+        .admin-result {
+            font-family: monospace;
+            color: #3498db;
+            font-size: 12px;
+            word-break: break-all;
         }
     </style>
 </head>
@@ -65,38 +100,69 @@
     <h2>BACON HUB</h2>
     <p>Hoàn thành vượt link để lấy key sử dụng trong game.</p>
     
-    <!-- Link vượt link chính của bạn (có thể thay đổi link rút gọn vào đây) -->
-    <button class="btn" onclick="location.href='https://linkvertise.com'">GET KEY</button>
+    <!-- Nút lấy key chính -->
+    <button class="btn" onclick="openLink()">GET KEY</button>
     
-    <div id="userKeyBox" class="key-box">Key của bạn: ssaa_...</div>
+    <!-- Ô hiển thị key theo giờ -->
+    <div id="keyDisplay" class="key-box">Đang tạo key...</div>
 
-    <!-- Nút Admin -->
-    <button class="admin-btn" onclick="openAdmin()">ADMIN PANEL</button>
+    <!-- Nút Admin nhỏ -->
+    <button class="admin-trigger" onclick="toggleAdmin()">Admin</button>
+
+    <!-- Bảng Admin ẩn/hiện -->
+    <div id="adminPanel" class="admin-panel">
+        <label>Key hiện tại (1 tiếng):</label>
+        <div id="hourlyKeyResult" class="admin-result">---</div>
+        
+        <div style="margin-top: 8px;">
+            <label>Admin Key Pass:</label>
+            <input type="password" id="adminKeyInput" class="admin-input" placeholder="Nhập pass lấy key vv..." oninput="checkAdminKey(this.value)">
+        </div>
+        <div id="permanentKeyResult" class="admin-result" style="color: #e74c3c;"></div>
+    </div>
 </div>
 
 <script>
-    // Thuật toán giả lập tạo key theo giờ giống hệt trong game
+    // Thuật toán sinh key theo giờ chuẩn xác
     function getHourlyKey() {
         const blockTime = Math.floor(Date.now() / 1000 / 3600);
         const secretCode = (blockTime * 16253) % 90000 + 10000;
         return "ssaa_" + secretCode;
     }
 
-    // Hiển thị key giờ tự động cho người dùng bình thường
-    document.getElementById("userKeyBox").innerText = "Key của bạn: " + getHourlyKey();
-    document.getElementById("userKeyBox").style.display = "block";
+    // Gán key theo giờ vào giao diện chính
+    const currentKey = getHourlyKey();
+    document.getElementById("keyDisplay").innerText = currentKey;
+    document.getElementById("hourlyKeyResult").innerText = currentKey;
 
-    function openAdmin() {
-        let pass = prompt("Nhập mật khẩu Admin:");
-        if (pass === "nah'iwin") {
-            let adminPass2 = prompt("Nhập mật khẩu Admin Key (helloworldnah'iwin):");
-            if (adminPass2 === "helloworldnah'iwin") {
-                alert("Key vĩnh viễn của bạn là: ssaa_16253");
-            } else {
-                alert("Sai mật khẩu Admin Key! Key giờ hiện tại là: " + getHourlyKey());
-            }
+    function openLink() {
+        // Thay link Linkvertise hoặc trạm rút gọn của bạn vào đây
+        window.location.href = "https://linkvertise.com"; 
+    }
+
+    // Xử lý bật/tắt bảng Admin bằng mật khẩu nah'iwin
+    function toggleAdmin() {
+        let panel = document.getElementById("adminPanel");
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
         } else {
-            alert("Sai mật khẩu Admin!");
+            let pass = prompt("Nhập mật khẩu Admin:");
+            if (pass === "nah'iwin") {
+                panel.style.display = "block";
+            } else if (pass !== null) {
+                alert("Sai mật khẩu!");
+            }
+        }
+    }
+
+    // Xử lý ô nhập mật khẩu lấy key vĩnh viễn (helloworldnah'iwin)
+    function checkAdminKey(val) {
+        let resBox = document.getElementById("permanentKeyResult");
+        if (val === "helloworldnah'iwin") {
+            resBox.innerText = "Key VV: ssaa_16253";
+            resBox.style.color = "#2ecc71";
+        } else {
+            resBox.innerText = "";
         }
     }
 </script>
