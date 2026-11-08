@@ -13,7 +13,7 @@
         }
 
         body {
-            background: url('https://i.pinimg.com/564x/fc/42/c4/fc42c402524859f1a5e0c952c25b69a3.jpg') no-repeat center center fixed;
+            background-no-repeat: center center fixed;
             background-size: cover;
             color: #ffffff;
             font-family: 'Poppins', sans-serif;
@@ -22,6 +22,7 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
+            transition: background-image 0.5s ease-in-out;
         }
 
         /* Lớp phủ tối giúp rõ giao diện card */
@@ -83,6 +84,8 @@
             transition: 0.2s ease;
             box-shadow: 0 4px 15px rgba(254, 44, 85, 0.4);
             margin-bottom: 15px;
+            text-decoration: none;
+            display: block;
         }
 
         .btn:hover {
@@ -92,6 +95,14 @@
 
         .btn:active {
             transform: translateY(0);
+        }
+
+        .timer-text {
+            color: #ffcc00;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
         }
 
         .key-box {
@@ -123,10 +134,11 @@
         <!-- Bước 1: Yêu cầu Follow TikTok -->
         <div id="step1" class="step-box active">
             <p style="font-size: 14px; margin-bottom: 20px; color: #ddd;">Bạn cần Follow TikTok <b style="color: #fe2c55;">@huy.nguyn.bacon</b> để mở khóa Key.</p>
-            <button class="btn" onclick="startFollowProcess()">FOLLOW TIKTOK ĐỂ LẤY KEY</button>
+            <a href="https://www.tiktok.com/@huy.nguyn.bacon" target="_blank" class="btn" id="tiktokBtn" onclick="startTimer()">FOLLOW TIKTOK ĐỂ LẤY KEY</a>
+            <div id="timerText" class="timer-text">Vui lòng chờ 10s trên TikTok...</div>
         </div>
 
-        <!-- Bước 2: Tự nhận diện và hiện Key khi quay lại -->
+        <!-- Bước 2: Hiện Key sau khi đếm ngược xong -->
         <div id="step2" class="step-box">
             <p style="font-size: 14px; margin-bottom: 10px; color: #00ff88;">✔ Đã xác nhận hoàn thành!</p>
             <div class="key-box" id="keyDisplay">Đang tải...</div>
@@ -139,21 +151,55 @@
     </div>
 
     <script>
-        const tiktokLink = "https://www.tiktok.com/@huy.nguyn.bacon";
+        // Danh sách 14 hình nền ngẫu nhiên chất lượng cao
+        const backgrounds = [
+            'https://i.pinimg.com/564x/fc/42/c4/fc42c402524859f1a5e0c952c25b69a3.jpg',
+            'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop'
+        ];
 
-        // Tự động kiểm tra trạng thái khi quay lại trang web
+        // Tự động lấy 1 hình nền ngẫu nhiên khi load trang
         window.onload = function() {
-            if (localStorage.getItem("bacon_hub_followed") === "true") {
-                showKeyStep();
-            }
+            const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+            document.body.style.backgroundImage = `url('${randomBg}')`;
         }
 
-        function startFollowProcess() {
-            // Lưu trạng thái đã bấm follow
-            localStorage.setItem("bacon_hub_followed", "true");
-            
-            // Chuyển hướng người dùng sang đúng kênh TikTok của bạn
-            window.location.href = tiktokLink;
+        let isCounting = false;
+
+        function startTimer() {
+            if (isCounting) return;
+            isCounting = true;
+
+            const tiktokBtn = document.getElementById("tiktokBtn");
+            const timerText = document.getElementById("timerText");
+
+            tiktokBtn.style.opacity = "0.6";
+            tiktokBtn.style.pointerEvents = "none";
+            timerText.style.display = "block";
+
+            let timeLeft = 10;
+            timerText.innerText = "Vui lòng chờ trên TikTok: " + timeLeft + "s...";
+
+            let countdown = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    timerText.innerText = "Vui lòng chờ trên TikTok: " + timeLeft + "s...";
+                } else {
+                    clearInterval(countdown);
+                    showKeyStep();
+                }
+            }, 1000);
         }
 
         function showKeyStep() {
