@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,9 @@
         }
 
         body {
-            background-no-repeat: center center fixed;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
             background-size: cover;
             color: #ffffff;
             font-family: 'Poppins', sans-serif;
@@ -22,10 +24,9 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
-            transition: background-image 0.5s ease-in-out;
         }
 
-        /* Lớp phủ tối giúp rõ giao diện card */
+        /* Dark overlay for better card readability */
         body::before {
             content: '';
             position: absolute;
@@ -63,14 +64,6 @@
             margin-bottom: 25px;
         }
 
-        .step-box {
-            display: none;
-        }
-
-        .step-box.active {
-            display: block;
-        }
-
         .btn {
             background: #fe2c55;
             color: #ffffff;
@@ -97,14 +90,6 @@
             transform: translateY(0);
         }
 
-        .timer-text {
-            color: #ffcc00;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
         .key-box {
             background: rgba(15, 15, 15, 0.9);
             border: 1.5px dashed #fe2c55;
@@ -129,20 +114,15 @@
 
     <div class="container">
         <h1>BACON HUB</h1>
-        <p class="subtitle">Hệ thống lấy Key tự động</p>
+        <p class="subtitle">Automatic Key System</p>
 
-        <!-- Bước 1: Yêu cầu Follow TikTok -->
-        <div id="step1" class="step-box active">
-            <p style="font-size: 14px; margin-bottom: 20px; color: #ddd;">Bạn cần Follow TikTok <b style="color: #fe2c55;">@huy.nguyn.bacon</b> để mở khóa Key.</p>
-            <a href="https://www.tiktok.com/@huy.nguyn.bacon" target="_blank" class="btn" id="tiktokBtn" onclick="startTimer()">FOLLOW TIKTOK ĐỂ LẤY KEY</a>
-            <div id="timerText" class="timer-text">Vui lòng chờ 10s trên TikTok...</div>
-        </div>
-
-        <!-- Bước 2: Hiện Key sau khi đếm ngược xong -->
-        <div id="step2" class="step-box">
-            <p style="font-size: 14px; margin-bottom: 10px; color: #00ff88;">✔ Đã xác nhận hoàn thành!</p>
-            <div class="key-box" id="keyDisplay">Đang tải...</div>
-            <button class="btn" id="copyBtn" onclick="copyKey()">SAO CHÉP KEY</button>
+        <!-- Main interaction section -->
+        <div>
+            <p style="font-size: 14px; margin-bottom: 15px; color: #ddd;">You need to follow TikTok <b style="color: #fe2c55;">@huy.nguyn.bacon</b> to use the Key.</p>
+            <a href="https://www.tiktok.com/@huy.nguyn.bacon" target="_blank" class="btn">FOLLOW TIKTOK</a>
+            
+            <div class="key-box" id="keyDisplay">Loading...</div>
+            <button class="btn" id="copyBtn" onclick="copyKey()">COPY KEY</button>
         </div>
 
         <div class="footer">
@@ -151,7 +131,7 @@
     </div>
 
     <script>
-        // Danh sách 14 hình nền ngẫu nhiên chất lượng cao
+        // List of 14 random high-quality wallpapers
         const backgrounds = [
             'https://i.pinimg.com/564x/fc/42/c4/fc42c402524859f1a5e0c952c25b69a3.jpg',
             'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1920&auto=format&fit=crop',
@@ -169,44 +149,12 @@
             'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop'
         ];
 
-        // Tự động lấy 1 hình nền ngẫu nhiên khi load trang
+        // Automatically pick a random background every time the page loads
         window.onload = function() {
             const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
             document.body.style.backgroundImage = `url('${randomBg}')`;
-        }
 
-        let isCounting = false;
-
-        function startTimer() {
-            if (isCounting) return;
-            isCounting = true;
-
-            const tiktokBtn = document.getElementById("tiktokBtn");
-            const timerText = document.getElementById("timerText");
-
-            tiktokBtn.style.opacity = "0.6";
-            tiktokBtn.style.pointerEvents = "none";
-            timerText.style.display = "block";
-
-            let timeLeft = 10;
-            timerText.innerText = "Vui lòng chờ trên TikTok: " + timeLeft + "s...";
-
-            let countdown = setInterval(() => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    timerText.innerText = "Vui lòng chờ trên TikTok: " + timeLeft + "s...";
-                } else {
-                    clearInterval(countdown);
-                    showKeyStep();
-                }
-            }, 1000);
-        }
-
-        function showKeyStep() {
-            document.getElementById("step1").classList.remove("active");
-            document.getElementById("step2").classList.add("active");
-            
-            // Tính toán Key đồng bộ thời gian thực theo từng giờ
+            // Calculate and display the hourly key immediately
             let timeBlock = Math.floor(Date.now() / 1000 / 3600);
             let secretCode = (timeBlock * 16253) % 90000 + 10000;
             let currentKey = "ssaa_" + secretCode;
@@ -218,10 +166,10 @@
             let keyText = document.getElementById("keyDisplay").innerText;
             navigator.clipboard.writeText(keyText).then(() => {
                 let btn = document.getElementById("copyBtn");
-                btn.innerText = "ĐÃ SAO CHÉP!";
+                btn.innerText = "COPIED!";
                 btn.style.background = "#00b894";
                 setTimeout(() => {
-                    btn.innerText = "SAO CHÉP KEY";
+                    btn.innerText = "COPY KEY";
                     btn.style.background = "#fe2c55";
                 }, 2000);
             });
